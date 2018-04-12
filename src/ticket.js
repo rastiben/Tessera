@@ -11,20 +11,22 @@ export default class Ticket {
     createTicket(uid,staff_id,subject,message,callback){
         const self = this;
 
+        const body = {
+            "source":"API",
+            "uid": uid,
+            "staff_id": staff_id,
+            "subject": subject,
+            "ip": "localhost",
+            "message": message,
+            "forwho": "API"
+        };
+
         request.post({
             url: self.store.addr + "api/tickets.json",//your url
             headers:{
                 'X-API-Key' : self.store.apiKey
             },
-            body: '{ \
-                "source": "API",  \
-                "uid": '+ uid +', \
-                "staff_id": '+ staff_id +', \
-                "subject": "'+ subject +'", \
-                "ip": "localhost", \
-                "message": "'+ message +'", \
-                "forwho" : "API" \
-            }'
+            body: JSON.stringify(body),
         },function (response, err, body){
             if(err.statusCode == 401){
                 self.store.connexion(self.createTicket(uid,staff_id,subject,message,callback));
